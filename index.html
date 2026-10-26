@@ -15,7 +15,6 @@ h1{margin:0 0 .5rem;font-size:clamp(1.5rem,5.5vw,2.2rem);line-height:1.15}
 sup{font-size:.65em;line-height:0}
 main{max-width:900px;margin:0 auto;padding:1rem .8rem 2rem}
 h2{margin:.2rem 0;font-size:1.25rem}
-#fm{color:var(--mu);font:1.2rem Georgia,serif;margin-bottom:.6rem}
 #vs{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}#vs:empty{display:none}
 #vs button{font:inherit;padding:.4rem .9rem;border-radius:999px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
 #vs button.on{background:var(--ac);border-color:var(--ac);color:#fff}
@@ -28,10 +27,19 @@ canvas{width:100%;height:auto;background:#fff;border:1px solid var(--bd);border-
 .box{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:.8rem 1rem;margin-top:.7rem}
 .box b{display:block;color:var(--mu);font-size:.85rem;margin-bottom:.2rem}
 #ex{font:1.3rem Georgia,serif}
+.prop{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.4rem .8rem;background:var(--card);border:2px solid var(--ac);border-radius:14px;padding:.7rem .8rem;margin-bottom:.8rem;font:clamp(1.3rem,5vw,2.1rem) Georgia,"Cambria Math",serif}
+.pc{padding:.3rem .8rem .5rem;border-radius:10px;text-align:center}
+.pc small{display:block;font:600 .7rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.1rem}
+.pc.st{background:#eef2ff}.pc.st small{color:#4338ca}.pc.go{background:#ecfdf5}.pc.go small{color:#047857}
+.cd{flex-basis:100%;text-align:center;font:.9rem system-ui,sans-serif;color:var(--mu)}
+i{font-style:italic;font-weight:600}.a{color:#2563eb}.b{color:#ea580c}.n{color:#16a34a}.m{color:#9333ea}.s{color:#dc2626}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;font-size:.85em}
+.fr>span:first-child{border-bottom:2px solid currentColor;padding:0 .25em}
+.ov{border-top:2px solid currentColor;padding:0 .15em}
 </style></head><body>
 <header><h1>Propiedades de las potencias</h1><nav id="nav"></nav></header>
 <main>
-<h2 id="tt"></h2><div id="fm"></div><div id="vs"></div>
+<h2 id="tt"></h2><div id="vs"></div><div class="prop" id="pr"></div>
 <canvas id="cv" width="700" height="300"></canvas>
 <div class="ctl"><button id="pl">▶</button><button id="rs" class="g">↺</button><input type="range" id="sl" min="0" max="100" step="0.2" value="0" aria-label="Progreso"><span id="pc">0%</span></div><div class="hint">Si pulsas ▶ cuando la animación está al final, se reproduce al revés.</div>
 <div class="box"><b>Explicación</b><span id="em"></span></div>
@@ -120,24 +128,40 @@ T('=',60,y,C.s,40,sg(p,0,.1));fly('n',150,y1-4,132,y-28,C.n,sg(p,.1,.45),24);T('
 x.globalAlpha=sg(p,.3,.5);x.strokeStyle=C.w;x.lineWidth=3;x.beginPath();x.moveTo(184,y-30);x.lineTo(184+(M?90:55),y-30);x.stroke();
 fly('a',120,y1,M?205:208,y,C.a,sg(p,.4,.8));if(M)fly('m',150,y1-26,228,y-18,C.m,sg(p,.5,.85),26)};
 
+const s5r=op=>p=>{const y1=70,y=190,q2=sg(p,.4,.75);
+PW('a','n',200,y1,C.a,C.n);T(op,262,y1,C.s);PW('b','n',325,y1,C.b,C.n);T('=',40,y,C.s);
+for(let i=0;i<3;i++){const q=sg(p,i*.1,.3+i*.1),px=100+i*125;
+fly('a',200,y1,L(110+i*40,px+30,q2),y,C.a,q);fly('b',325,y1,L(300+i*40,px+80,q2),y,C.b,q);
+T('(',px,y,C.s,44,q2);T(op,px+55,y,C.s,40,q2);T(')',px+105,y,C.s,44,q2)}
+T(op,245,y,C.s,40,sg(p,.3,.45)*(1-sg(p,.4,.55)));
+const g=sg(p,.35,.5)*(1-sg(p,.45,.6));BR(96,204,y+32,C.n,'n veces',g);BR(286,394,y+32,C.n,'n veces',g);
+BR(88,458,y+32,C.n,'n veces',sg(p,.78,.92));
+const al=sg(p,.85,1),r=sg(p,.78,1);T('=',480,y,C.s,40,al);
+fly('(',100,y,530,y,C.s,r,44);fly('a',130,y,560,y,C.a,r);fly(op,155,y,585,y,C.s,r);fly('b',180,y,610,y,C.b,r);fly(')',205,y,635,y,C.s,r,44);T('n',658,y-18,C.n,26,al)};
+
+const K=(k,t)=>`<i class="${k}">${t}</i>`,A=K('a','a'),Bb=K('b','b'),N=K('n','n'),M=K('m','m'),Q=(b,e)=>`${b}<sup>${e}</sup>`,
+FR=(u,d)=>`<span class="fr"><span>${u}</span><span>${d}</span></span>`,RD=(i,r)=>`<sup>${i}</sup>√<span class="ov">${r}</span>`,
+MI=K('s','−'),PL=K('s','+'),NG=`(${MI}${A})`,pa=o=>`(${A} ${o} ${Bb})`,pw=o=>`${Q(A,N)} ${o} ${Q(Bb,N)}`,
+prop=f=>`<div class="pc st"><small>Partimos de</small><div>${f[0]}</div></div><div class="eq">=</div><div class="pc go"><small>Llegamos a</small><div>${f[1]}</div></div>`+(f[2]?`<div class="cd">${f[2]}</div>`:'');
 const R=(f,e,x,d,l)=>({f,e,x,d,l});
+const e5='(a · b)ⁿ repite el paréntesis n veces; al reagrupar, todas las a se juntan por un lado y todas las b por otro. ',e5r='Se repiten n veces la a y n veces la b, se emparejan en n paréntesis (a · b) y se recogen como (a · b)ⁿ. ';
 const S={
-1:{t:'Definición de potencia',v:[R('aⁿ = a · a · … · a   (n veces)','El exponente n indica cuántas veces se escribe la base a como factor. Las copias salen de la base, que se queda en su sitio.','2⁴ = 2 · 2 · 2 · 2 = 16',s1)]},
-2:{t:'Potencia de exponente 1',v:[R('a¹ = a','Con exponente 1 solo hay un factor: la potencia es la propia base.','9¹ = 9',s2)]},
-3:{t:'Potencia de exponente 0',v:[R('a⁰ = 1   (a ≠ 0)','Dividir aⁿ entre sí misma da 1, y por la regla de la misma base da aⁿ⁻ⁿ = a⁰. Cada factor del dividendo se cancela con uno del divisor.','7⁰ = 1',s3)]},
-4:{t:'Potencia con base negativa',v:[R('(−a)ⁿ = +aⁿ   si n es par','Los factores negativos se agrupan por parejas y cada pareja da +. Con n par no sobra ninguno: el resultado es positivo.','(−2)⁴ = +16',s4f(4),'n par'),R('(−a)ⁿ = −aⁿ   si n es impar','Los factores negativos se agrupan por parejas, pero con n impar sobra uno: el resultado es negativo.','(−2)³ = −8',s4f(3),'n impar')]},
-5:{t:'Producto y división con el mismo exponente',v:[R('(a · b)ⁿ = aⁿ · bⁿ','(a · b)ⁿ repite el paréntesis n veces. Al reagrupar, todas las a se juntan por un lado y todas las b por otro.','(4 · 3)² = 4² · 3² = 12²',s5f('·'),'Producto'),R('(a : b)ⁿ = aⁿ : bⁿ','(a : b)ⁿ repite el paréntesis n veces. Al reagrupar, todas las a se juntan por un lado y todas las b por otro.','(8 : 2)³ = 8³ : 2³ = 4³',s5f(':'),'División')]},
-6:{t:'Producto y división con la misma base',v:[R('aⁿ · aᵐ = aⁿ⁺ᵐ','aⁿ aporta n factores a y aᵐ aporta m factores a. Al juntarlos hay n + m factores iguales.','2³ · 2⁴ = 2⁷',s6,'Producto'),R('aⁿ : aᵐ = aⁿ⁻ᵐ  (n ≥ m)','Se cancelan m factores del dividendo con los m del divisor. Quedan n − m factores.','5⁶ : 5² = 5⁴',s6d,'División')]},
-7:{t:'Potencia de una potencia',v:[R('(aⁿ)ᵐ = aⁿ·ᵐ','(aⁿ)ᵐ repite aⁿ m veces. Con la misma base se suman los exponentes: m sumandos iguales a n, es decir, n · m.','(3²)⁴ = 3⁸',s7)]},
-8:{t:'Exponente negativo',v:[R('a⁻ⁿ = 1 / aⁿ','Escribimos −n como 0 − n: restar exponentes es dividir potencias, y a⁰ = 1. Queda 1 dividido entre aⁿ.','2⁻³ = 1/2³ = 1/8',s8)]},
-9:{t:'Exponente fraccionario',v:[R('a^(1/n) = ⁿ√a','Un exponente 1/n es una raíz de índice n. El denominador n pasa a ser el índice.','8^(1/3) = ∛8 = 2',s9f(0),'Exponente 1/n'),R('a^(m/n) = ⁿ√(aᵐ)','En m/n, el denominador n es el índice de la raíz y el numerador m es el exponente del radicando.','4^(3/2) = √(4³) = √64 = 8',s9f(1),'Exponente m/n')]}};
+1:{t:'Definición de potencia',v:[R([Q(A,N),`${A} · ${A} · … · ${A}`,'(n veces)'],'El exponente n indica cuántas veces se escribe la base a como factor. Las copias salen de la base, que se queda en su sitio.','2⁴ = 2 · 2 · 2 · 2 = 16',s1)]},
+2:{t:'Potencia de exponente 1',v:[R([Q(A,'1'),A],'Con exponente 1 solo hay un factor: la potencia es la propia base.','9¹ = 9',s2)]},
+3:{t:'Potencia de exponente 0',v:[R([`${Q(A,N)} : ${Q(A,N)}`,`${Q(A,'0')} = 1`,'(con a ≠ 0)'],'Dividir aⁿ entre sí misma da 1, y por la regla de la misma base da aⁿ⁻ⁿ = a⁰. Cada factor del dividendo se cancela con uno del divisor.','7⁰ = 1',s3)]},
+4:{t:'Potencia con base negativa',v:[R([Q(NG,N),`${PL}${Q(A,N)}`,'(si n es par)'],'Los factores negativos se agrupan por parejas y cada pareja da +. Con n par no sobra ninguno: el resultado es positivo.','(−2)⁴ = +16',s4f(4),'n par'),R([Q(NG,N),`${MI}${Q(A,N)}`,'(si n es impar)'],'Los factores negativos se agrupan por parejas, pero con n impar sobra uno: el resultado es negativo.','(−2)³ = −8',s4f(3),'n impar')]},
+5:{t:'Producto y división con el mismo exponente',v:[R([Q(pa('·'),N),pw('·')],e5,'(4 · 3)² = 4² · 3² = 12²',s5f('·'),'(a·b)ⁿ → aⁿ·bⁿ'),R([pw('·'),Q(pa('·'),N)],e5r,'4² · 3² = (4 · 3)² = 12²',s5r('·'),'aⁿ·bⁿ → (a·b)ⁿ'),R([Q(pa(':'),N),pw(':')],e5,'(8 : 2)³ = 8³ : 2³ = 4³',s5f(':'),'(a:b)ⁿ → aⁿ:bⁿ'),R([pw(':'),Q(pa(':'),N)],e5r.replace(/·/g,':'),'8³ : 2³ = (8 : 2)³ = 4³',s5r(':'),'aⁿ:bⁿ → (a:b)ⁿ')]},
+6:{t:'Producto y división con la misma base',v:[R([`${Q(A,N)} · ${Q(A,M)}`,Q(A,`${N}+${M}`)],'aⁿ aporta n factores a y aᵐ aporta m factores a. Al juntarlos hay n + m factores iguales.','2³ · 2⁴ = 2⁷',s6,'Producto'),R([`${Q(A,N)} : ${Q(A,M)}`,Q(A,`${N}−${M}`),'(con n ≥ m)'],'Se cancelan m factores del dividendo con los m del divisor. Quedan n − m factores.','5⁶ : 5² = 5⁴',s6d,'División')]},
+7:{t:'Potencia de una potencia',v:[R([Q(`(${Q(A,N)})`,M),Q(A,`${N}·${M}`)],'(aⁿ)ᵐ repite aⁿ m veces. Con la misma base se suman los exponentes: m sumandos iguales a n, es decir, n · m.','(3²)⁴ = 3⁸',s7)]},
+8:{t:'Exponente negativo',v:[R([Q(A,`−${N}`),`${FR(1,Q(A,N))}`],'Escribimos −n como 0 − n: restar exponentes es dividir potencias, y a⁰ = 1. Queda 1 dividido entre aⁿ.','2⁻³ = 1/2³ = 1/8',s8)]},
+9:{t:'Exponente fraccionario',v:[R([Q(A,FR(1,N)),RD(N,A)],'Un exponente 1/n es una raíz de índice n. El denominador n pasa a ser el índice.','8^(1/3) = ∛8 = 2',s9f(0),'Exponente 1/n'),R([Q(A,FR(M,N)),RD(N,Q(A,M))],'En m/n, el denominador n es el índice de la raíz y el numerador m es el exponente del radicando.','4^(3/2) = √(4³) = √64 = 8',s9f(1),'Exponente m/n')]}};
 const B=['aⁿ','a¹','a⁰','(−a)ⁿ','(a·b)ⁿ','aⁿ·aᵐ','(aⁿ)ᵐ','a⁻ⁿ','a<sup>m/n</sup>'];
 let cur=1,vi=0,P=0,dir=0,raf=null;const $=s=>document.querySelector(s);
 B.forEach((h,i)=>{const e=document.createElement('button');e.innerHTML=h;e.onclick=()=>go(i+1);$('#nav').append(e)});
 function go(k,j=0){cur=k;vi=j;stop();P=0;const V=S[k].v,v=V[j];
 document.querySelectorAll('#nav button').forEach((b,i)=>b.classList.toggle('on',i+1==k));
 $('#vs').innerHTML=V.length>1?V.map((u,i)=>`<button class="${i==j?'on':''}" onclick="go(${k},${i})">${u.l}</button>`).join(''):'';
-$('#tt').textContent=S[k].t;$('#fm').textContent=v.f;$('#em').textContent=v.e;$('#ex').textContent=v.x;draw()}
+$('#tt').textContent=S[k].t;$('#pr').innerHTML=prop(v.f);$('#em').textContent=v.e;$('#ex').textContent=v.x;draw()}
 function draw(){x.globalAlpha=1;x.clearRect(0,0,W,H);x.textAlign='center';x.textBaseline='middle';S[cur].v[vi].d(P);
 $('#sl').value=P*100;$('#pc').textContent=Math.round(P*100)+'%'}
 function stop(){dir=0;cancelAnimationFrame(raf);$('#pl').textContent='▶'}
