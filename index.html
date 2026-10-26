@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Propiedades de las potencias</title>
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--bd:#d9dfea;--tx:#1b2230;--mu:#667085;--ac:#4f46e5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid var(--bd);padding:calc(.5rem + env(safe-area-inset-top,0px)) .7rem .6rem;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+h1{margin:0 0 .5rem;font-size:clamp(1.5rem,5.5vw,2.2rem);line-height:1.15}
+#nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.35rem;max-width:900px}
+@media(min-width:700px){#nav{grid-template-columns:repeat(9,1fr)}}
+#nav button{font:inherit;font-size:1rem;font-family:Georgia,serif;font-style:italic;padding:.5rem .1rem;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);cursor:pointer}
+#nav button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+sup{font-size:.65em;line-height:0}
+main{max-width:900px;margin:0 auto;padding:1rem .8rem 2rem}
+h2{margin:.2rem 0;font-size:1.25rem}
+#fm{color:var(--mu);font:1.2rem Georgia,serif;margin-bottom:.6rem}
+#vs{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}#vs:empty{display:none}
+#vs button{font:inherit;padding:.4rem .9rem;border-radius:999px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
+#vs button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+canvas{width:100%;height:auto;background:#fff;border:1px solid var(--bd);border-radius:14px;display:block}
+.ctl{display:flex;align-items:center;gap:.6rem;margin:.8rem 0 .2rem}
+.ctl button{font:inherit;border:0;border-radius:10px;padding:.55rem .9rem;background:var(--ac);color:#fff;cursor:pointer}
+.ctl button.g{background:var(--card);border:1px solid var(--bd);color:var(--tx)}
+#sl{flex:1;height:2rem;accent-color:var(--ac)}
+.hint{color:var(--mu);font-size:.85rem}
+.box{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:.8rem 1rem;margin-top:.7rem}
+.box b{display:block;color:var(--mu);font-size:.85rem;margin-bottom:.2rem}
+#ex{font:1.3rem Georgia,serif}
+</style></head><body>
+<header><h1>Propiedades de las potencias</h1><nav id="nav"></nav></header>
+<main>
+<h2 id="tt"></h2><div id="fm"></div><div id="vs"></div>
+<canvas id="cv" width="700" height="300"></canvas>
+<div class="ctl"><button id="pl">▶</button><button id="rs" class="g">↺</button><input type="range" id="sl" min="0" max="100" step="0.2" value="0" aria-label="Progreso"><span id="pc">0%</span></div><div class="hint">Si pulsas ▶ cuando la animación está al final, se reproduce al revés.</div>
+<div class="box"><b>Explicación</b><span id="em"></span></div>
+<div class="box"><b>Ejemplo numérico</b><div id="ex"></div></div>
+</main>
+<script>
+const W=700,H=300,cv=document.getElementById('cv'),x=cv.getContext('2d'),dpr=window.devicePixelRatio||1;
+cv.width=W*dpr;cv.height=H*dpr;x.scale(dpr,dpr);
+const C={a:'#2563eb',b:'#ea580c',n:'#16a34a',m:'#9333ea',s:'#64748b',w:'#1e293b',r:'#dc2626'};
+const cl=v=>Math.max(0,Math.min(1,v)),E=t=>t<.5?2*t*t:-1+(4-2*t)*t,sg=(p,s,e)=>E(cl((p-s)/(e-s))),L=(a,b,t)=>a+(b-a)*t;
+function T(t,px,py,col,sz=40,al=1){x.globalAlpha=al;x.fillStyle=col;x.font=(/^[abnm]$/.test(t)?'italic ':'')+sz+'px Georgia,serif';x.fillText(t,px,py)}
+function PW(bs,e,px,py,cb,ce,al=1){T(bs,px,py,cb,40,al);T(e,px+22,py-18,ce,26,al)}
+function BR(x1,x2,py,col,lab,al){if(al<=0.01)return;x.globalAlpha=al;x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(x1,py);x.lineTo(x1,py+8);x.lineTo(x2,py+8);x.lineTo(x2,py);x.stroke();T(lab,(x1+x2)/2,py+34,col,20,al)}
+/* Una copia sale de su origen (que permanece) y viaja en arco hasta su destino */
+function fly(t,fx,fy,tx,ty,col,q,sz=40,m=1){if(q<=0)return;T(t,L(fx,tx,q),L(fy,ty,q)-34*Math.sin(Math.PI*q),col,sz,Math.min(1,q*4)*m)}
+
+function s1(p){const y=150;PW('a','n',100,y,C.a,C.n);T('=',170,y,C.s,40,sg(p,0,.1));
+for(let i=0;i<3;i++){const tx=250+i*80;fly('a',100,y,tx,y,C.a,sg(p,.05+i*.2,.35+i*.2));if(i)T('·',tx-40,y,C.s,40,sg(p,.3+i*.2,.4+i*.2))}
+BR(235,425,y+40,C.n,'n veces',sg(p,.85,1))}
+
+function s6(p){const y1=80,y=190,q2=sg(p,.5,.8),pos=k=>k<3?130+k*48:L(330+(k-3)*48,130+k*48,q2);
+PW('a','n',200,y1,C.a,C.n);T('·',262,y1,C.s);PW('a','m',325,y1,C.a,C.m);T('=',70,y,C.s);
+for(let k=0;k<5;k++){const g=k<3,i=g?k:k-3;fly('a',g?200:325,y1,pos(k),y,C.a,sg(p,(g?0:.15)+i*.1,(g?.3:.45)+i*.1))}
+for(let k=0;k<4;k++)T('·',(pos(k)+pos(k+1))/2,y,C.s,40,sg(p,.45,.6));
+const bg=sg(p,.4,.5)*(1-sg(p,.78,.9));
+BR(pos(0)-14,pos(2)+14,y+32,C.n,'n veces',bg);BR(pos(3)-14,pos(4)+14,y+32,C.m,'m veces',bg);
+BR(pos(0)-14,pos(4)+14,y+32,C.w,'n + m veces',sg(p,.85,1));
+const al=sg(p,.88,1);T('=',395,y,C.s,40,al);T('a',440,y,C.a,40,al);T('n',462,y-18,C.n,26,al);T('+',478,y-18,C.s,26,al);T('m',494,y-18,C.m,26,al)}
+
+const s5f=op=>p=>{const y1=70,y=190,q2=sg(p,.4,.72),fo=1-q2;
+T('(',110,y1,C.s,44);T('a',140,y1,C.a);T(op,165,y1,C.s);T('b',190,y1,C.b);T(')',215,y1,C.s,44);T('n',238,y1-18,C.n,26);T('=',60,y,C.s);
+for(let i=0;i<3;i++){const q=sg(p,i*.1,.3+i*.1),px=100+i*125;
+fly('a',140,y1,L(px+30,150+i*40,q2),y,C.a,q);fly('b',190,y1,L(px+80,330+i*40,q2),y,C.b,q);
+fly('(',110,y1,px,y,C.s,q,44,fo);fly(op,165,y1,px+55,y,C.s,q,40,fo);fly(')',215,y1,px+105,y,C.s,q,44,fo)}
+T(op,280,y,C.s,40,sg(p,.65,.78));
+BR(136,244,y+32,C.n,'n veces',sg(p,.75,.9));BR(316,424,y+32,C.n,'n veces',sg(p,.75,.9));
+const al=sg(p,.88,1);T('=',470,y,C.s,40,al);PW('a','n',520,y,C.a,C.n,al);T(op,570,y,C.s,40,al);PW('b','n',615,y,C.b,C.n,al)};
+
+function s2(p){const y=150;PW('a','1',100,y,C.a,C.n);T('=',170,y,C.s,40,sg(p,0,.1));fly('a',100,y,250,y,C.a,sg(p,.1,.5));BR(232,268,y+40,C.n,'1 factor',sg(p,.6,.8));
+const al=sg(p,.8,1);T('=',320,y,C.s,40,al);fly('a',250,y,370,y,C.a,al)}
+
+function s3(p){const y1=75,y=190,c=sg(p,.55,.8),mm=1-.65*c,X=[100,148,196,300,348,396];
+PW('a','n',180,y1,C.a,C.n);T(':',250,y1,C.s);PW('a','n',300,y1,C.a,C.n);T('=',45,y,C.s);
+X.forEach((px,k)=>{const g=k<3,i=k%3;fly('a',g?180:300,y1,px,y,C.a,sg(p,(g?0:.1)+i*.08,(g?.25:.35)+i*.08),40,mm)});
+T(':',250,y,C.s,40,sg(p,.3,.45));BR(86,210,y+32,C.n,'n veces',sg(p,.35,.5));BR(286,410,y+32,C.n,'n veces',sg(p,.35,.5));
+x.globalAlpha=c;x.strokeStyle=C.r;x.lineWidth=3;X.forEach(px=>{x.beginPath();x.moveTo(px-14,y+16);x.lineTo(px+14,y-16);x.stroke()});
+const al=sg(p,.82,1);T('=',450,y,C.s,40,al);PW('a','0',495,y,C.a,C.n,al);T('=',565,y,C.s,40,al);T('1',605,y,C.w,40,al)}
+
+const s4f=N=>p=>{const y1=65,y=185,sn=N%2?'−':'+',px=i=>70+i*100;
+T('(',110,y1,C.s,44);T('−',135,y1,C.r);T('a',165,y1,C.a);T(')',195,y1,C.s,44);T('n',222,y1-18,C.n,26);T('=',35,y,C.s);
+for(let i=0;i<N;i++){const q=sg(p,i*.1,.3+i*.1);fly('(',110,y1,px(i),y,C.s,q,44);fly('−',135,y1,px(i)+25,y,C.r,q);fly('a',165,y1,px(i)+55,y,C.a,q);fly(')',195,y1,px(i)+85,y,C.s,q,44)}
+for(let j=0;j<Math.floor(N/2);j++)BR(px(2*j)-12,px(2*j+1)+98,y+32,C.r,'(−)·(−) = +',sg(p,.5,.65));
+if(N%2)BR(px(N-1)-12,px(N-1)+98,y+32,C.r,'sobra un −',sg(p,.6,.72));
+const al=sg(p,.82,1);T('=',510,y,C.s,40,al);T(sn,555,y,C.r,40,al);PW('a','n',595,y,C.a,C.n,al)};
+
+function s6d(p){const y1=80,y=190,X=[130,178,226,330,378],c=sg(p,.55,.8);
+PW('a','n',200,y1,C.a,C.n);T(':',262,y1,C.s);PW('a','m',325,y1,C.a,C.m);T('=',70,y,C.s);
+X.forEach((px,k)=>{const g=k<3,i=g?k:k-3,d=(g?k<2:true)?1-.65*c:1;fly('a',g?200:325,y1,px,y,C.a,sg(p,(g?0:.15)+i*.1,(g?.3:.45)+i*.1),40,d)});
+T(':',280,y,C.s,40,sg(p,.4,.5));BR(116,240,y+32,C.n,'n veces',sg(p,.4,.5));BR(316,392,y+32,C.m,'m veces',sg(p,.4,.5));
+x.globalAlpha=c;x.strokeStyle=C.r;x.lineWidth=3;[130,178,330,378].forEach(px=>{x.beginPath();x.moveTo(px-14,y+16);x.lineTo(px+14,y-16);x.stroke()});
+BR(212,240,y+72,C.w,'quedan n − m',sg(p,.82,.95));
+const al=sg(p,.88,1);T('=',450,y,C.s,40,al);T('a',495,y,C.a,40,al);T('n',517,y-18,C.n,26,al);T('−',533,y-18,C.s,26,al);T('m',550,y-18,C.m,26,al)}
+
+function s7(p){const y1=55,y2=145,y3=240;
+T('(',200,y1,C.s,44);PW('a','n',230,y1,C.a,C.n);T(')',285,y1,C.s,44);T('m',308,y1-18,C.m,26);T('=',50,y2,C.s);
+for(let i=0;i<3;i++){const px=110+i*130,q=sg(p,i*.12,.3+i*.12),q2=sg(p,.45+i*.1,.7+i*.1);
+fly('a',230,y1,px,y2,C.a,q);fly('n',252,y1-18,px+22,y2-18,C.n,q,26);if(i)T('·',px-35,y2,C.s,40,q);fly('n',px+22,y2-18,502+i*44,y2-18,C.n,q2,26)}
+const a1=sg(p,.4,.5);T('=',450,y2,C.s,40,a1);T('a',480,y2,C.a,40,a1);[0,1].forEach(i=>T('+',524+i*44,y2-18,C.s,26,sg(p,.65,.8)));
+BR(494,605,y2+30,C.m,'m sumandos',sg(p,.78,.9));
+const al=sg(p,.88,1);T('=',450,y3,C.s,40,al);T('a',480,y3,C.a,40,al);T('n',502,y3-18,C.n,26,al);T('·',519,y3-18,C.s,26,al);T('m',536,y3-18,C.m,26,al)}
+
+function s8(p){const y1=65,y2=160,y3=250,f1=1-sg(p,.35,.5),q1=sg(p,.1,.3);
+T('a',100,y1,C.a);T('−',122,y1-18,C.r,26);T('n',140,y1-18,C.n,26);T('=',55,y2,C.s);
+fly('a',100,y1,110,y2,C.a,sg(p,0,.25));T('0',132,y2-18,C.n,26,sg(p,.1,.3));
+fly('−',122,y1-18,150,y2-18,C.r,q1,26,f1);fly('n',140,y1-18,168,y2-18,C.n,q1,26,f1);
+T(':',225,y2,C.s,40,sg(p,.4,.55));fly('a',100,y1,280,y2,C.a,sg(p,.3,.55));fly('n',140,y1-18,302,y2-18,C.n,sg(p,.3,.55),26);
+T('=',55,y3,C.s,40,sg(p,.55,.65));fly('1',110,y2,110,y3,C.w,sg(p,.55,.8));T(':',165,y3,C.s,40,sg(p,.6,.75));
+fly('a',280,y2,205,y3,C.a,sg(p,.55,.8));fly('n',302,y2-18,227,y3-18,C.n,sg(p,.55,.8),26);
+const q=sg(p,.82,1);T('=',330,y3,C.s,40,sg(p,.8,.9));fly('1',110,y3,410,y3-34,C.w,q);fly('a',205,y3,400,y3+22,C.a,q);fly('n',227,y3-18,422,y3+8,C.n,q,26);
+x.globalAlpha=sg(p,.85,1);x.strokeStyle=C.w;x.lineWidth=3;x.beginPath();x.moveTo(380,y3-10);x.lineTo(445,y3-10);x.stroke()}
+
+const s9f=M=>p=>{const y1=80,y=200;
+T('a',120,y1,C.a);T(M?'m':'1',150,y1-26,M?C.m:C.w,24);T('n',150,y1-4,C.n,24);
+x.globalAlpha=1;x.strokeStyle=C.s;x.lineWidth=2.5;x.beginPath();x.moveTo(138,y1-14);x.lineTo(164,y1-14);x.stroke();
+T('=',60,y,C.s,40,sg(p,0,.1));fly('n',150,y1-4,132,y-28,C.n,sg(p,.1,.45),24);T('√',165,y,C.w,64,sg(p,.15,.35));
+x.globalAlpha=sg(p,.3,.5);x.strokeStyle=C.w;x.lineWidth=3;x.beginPath();x.moveTo(184,y-30);x.lineTo(184+(M?90:55),y-30);x.stroke();
+fly('a',120,y1,M?205:208,y,C.a,sg(p,.4,.8));if(M)fly('m',150,y1-26,228,y-18,C.m,sg(p,.5,.85),26)};
+
+const R=(f,e,x,d,l)=>({f,e,x,d,l});
+const S={
+1:{t:'Definición de potencia',v:[R('aⁿ = a · a · … · a   (n veces)','El exponente n indica cuántas veces se escribe la base a como factor. Las copias salen de la base, que se queda en su sitio.','2⁴ = 2 · 2 · 2 · 2 = 16',s1)]},
+2:{t:'Potencia de exponente 1',v:[R('a¹ = a','Con exponente 1 solo hay un factor: la potencia es la propia base.','9¹ = 9',s2)]},
+3:{t:'Potencia de exponente 0',v:[R('a⁰ = 1   (a ≠ 0)','Dividir aⁿ entre sí misma da 1, y por la regla de la misma base da aⁿ⁻ⁿ = a⁰. Cada factor del dividendo se cancela con uno del divisor.','7⁰ = 1',s3)]},
+4:{t:'Potencia con base negativa',v:[R('(−a)ⁿ = +aⁿ   si n es par','Los factores negativos se agrupan por parejas y cada pareja da +. Con n par no sobra ninguno: el resultado es positivo.','(−2)⁴ = +16',s4f(4),'n par'),R('(−a)ⁿ = −aⁿ   si n es impar','Los factores negativos se agrupan por parejas, pero con n impar sobra uno: el resultado es negativo.','(−2)³ = −8',s4f(3),'n impar')]},
+5:{t:'Producto y división con el mismo exponente',v:[R('(a · b)ⁿ = aⁿ · bⁿ','(a · b)ⁿ repite el paréntesis n veces. Al reagrupar, todas las a se juntan por un lado y todas las b por otro.','(4 · 3)² = 4² · 3² = 12²',s5f('·'),'Producto'),R('(a : b)ⁿ = aⁿ : bⁿ','(a : b)ⁿ repite el paréntesis n veces. Al reagrupar, todas las a se juntan por un lado y todas las b por otro.','(8 : 2)³ = 8³ : 2³ = 4³',s5f(':'),'División')]},
+6:{t:'Producto y división con la misma base',v:[R('aⁿ · aᵐ = aⁿ⁺ᵐ','aⁿ aporta n factores a y aᵐ aporta m factores a. Al juntarlos hay n + m factores iguales.','2³ · 2⁴ = 2⁷',s6,'Producto'),R('aⁿ : aᵐ = aⁿ⁻ᵐ  (n ≥ m)','Se cancelan m factores del dividendo con los m del divisor. Quedan n − m factores.','5⁶ : 5² = 5⁴',s6d,'División')]},
+7:{t:'Potencia de una potencia',v:[R('(aⁿ)ᵐ = aⁿ·ᵐ','(aⁿ)ᵐ repite aⁿ m veces. Con la misma base se suman los exponentes: m sumandos iguales a n, es decir, n · m.','(3²)⁴ = 3⁸',s7)]},
+8:{t:'Exponente negativo',v:[R('a⁻ⁿ = 1 / aⁿ','Escribimos −n como 0 − n: restar exponentes es dividir potencias, y a⁰ = 1. Queda 1 dividido entre aⁿ.','2⁻³ = 1/2³ = 1/8',s8)]},
+9:{t:'Exponente fraccionario',v:[R('a^(1/n) = ⁿ√a','Un exponente 1/n es una raíz de índice n. El denominador n pasa a ser el índice.','8^(1/3) = ∛8 = 2',s9f(0),'Exponente 1/n'),R('a^(m/n) = ⁿ√(aᵐ)','En m/n, el denominador n es el índice de la raíz y el numerador m es el exponente del radicando.','4^(3/2) = √(4³) = √64 = 8',s9f(1),'Exponente m/n')]}};
+const B=['aⁿ','a¹','a⁰','(−a)ⁿ','(a·b)ⁿ','aⁿ·aᵐ','(aⁿ)ᵐ','a⁻ⁿ','a<sup>m/n</sup>'];
+let cur=1,vi=0,P=0,dir=0,raf=null;const $=s=>document.querySelector(s);
+B.forEach((h,i)=>{const e=document.createElement('button');e.innerHTML=h;e.onclick=()=>go(i+1);$('#nav').append(e)});
+function go(k,j=0){cur=k;vi=j;stop();P=0;const V=S[k].v,v=V[j];
+document.querySelectorAll('#nav button').forEach((b,i)=>b.classList.toggle('on',i+1==k));
+$('#vs').innerHTML=V.length>1?V.map((u,i)=>`<button class="${i==j?'on':''}" onclick="go(${k},${i})">${u.l}</button>`).join(''):'';
+$('#tt').textContent=S[k].t;$('#fm').textContent=v.f;$('#em').textContent=v.e;$('#ex').textContent=v.x;draw()}
+function draw(){x.globalAlpha=1;x.clearRect(0,0,W,H);x.textAlign='center';x.textBaseline='middle';S[cur].v[vi].d(P);
+$('#sl').value=P*100;$('#pc').textContent=Math.round(P*100)+'%'}
+function stop(){dir=0;cancelAnimationFrame(raf);$('#pl').textContent='▶'}
+function tick(){P=cl(P+dir*.004);draw();if(P>=1||P<=0)stop();else raf=requestAnimationFrame(tick)}
+$('#pl').onclick=()=>{if(dir){stop();return}dir=P>=1?-1:1;$('#pl').textContent='⏸';tick()};
+$('#rs').onclick=()=>{stop();P=0;draw()};
+$('#sl').oninput=e=>{stop();P=e.target.value/100;draw()};
+go(1);
+</script></body></html>
