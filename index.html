@@ -36,6 +36,7 @@ i{font-style:italic;font-weight:600}.a{color:#2563eb}.b{color:#ea580c}.n{color:#
 .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;font-size:.85em}
 .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 .25em}
 .ov{border-top:2px solid currentColor;padding:0 .15em}
+.br{flex-basis:100%;height:0}
 </style></head><body>
 <header><h1>Propiedades de las potencias</h1><nav id="nav"></nav></header>
 <main>
@@ -56,60 +57,82 @@ function BR(x1,x2,py,col,lab,al){if(al<=0.01)return;x.globalAlpha=al;x.strokeSty
 /* Una copia sale de su origen (que permanece) y viaja en arco hasta su destino */
 function fly(t,fx,fy,tx,ty,col,q,sz=40,m=1){if(q<=0)return;T(t,L(fx,tx,q),L(fy,ty,q)-34*Math.sin(Math.PI*q),col,sz,Math.min(1,q*4)*m)}
 
-function s1(p){const y=150;PW('a','n',100,y,C.a,C.n);T('=',170,y,C.s,40,sg(p,0,.1));
-for(let i=0;i<3;i++){const tx=250+i*80;fly('a',100,y,tx,y,C.a,sg(p,.05+i*.2,.35+i*.2));if(i)T('·',tx-40,y,C.s,40,sg(p,.3+i*.2,.4+i*.2))}
-BR(235,425,y+40,C.n,'n veces',sg(p,.85,1))}
+const G=(ch,col,sx,sy,xf,y,p,s,mf)=>{for(let k=0;k<4;k++)fly(k==2?'…':ch,sx,sy,xf(k),y,col,sg(p,s+k*.07,s+.25+k*.07),40,mf?mf(k):1)};
+const DT=(xs,y,al)=>{for(let k=0;k<xs.length-1;k++)T('·',(xs[k]+xs[k+1])/2,y,C.s,40,al)};
+const ST=(xs,y,c)=>{x.globalAlpha=c;x.strokeStyle=C.r;x.lineWidth=3;xs.forEach(px=>{x.beginPath();x.moveTo(px-14,y+16);x.lineTo(px+14,y-16);x.stroke()})};
 
-function s6(p){const y1=80,y=190,q2=sg(p,.5,.8),pos=k=>k<3?130+k*48:L(330+(k-3)*48,130+k*48,q2);
-PW('a','n',200,y1,C.a,C.n);T('·',262,y1,C.s);PW('a','m',325,y1,C.a,C.m);T('=',70,y,C.s);
-for(let k=0;k<5;k++){const g=k<3,i=g?k:k-3;fly('a',g?200:325,y1,pos(k),y,C.a,sg(p,(g?0:.15)+i*.1,(g?.3:.45)+i*.1))}
-for(let k=0;k<4;k++)T('·',(pos(k)+pos(k+1))/2,y,C.s,40,sg(p,.45,.6));
+function s1(p){const y=150,xf=k=>250+k*70;PW('a','n',100,y,C.a,C.n);T('=',170,y,C.s,40,sg(p,0,.1));
+G('a',C.a,100,y,xf,y,p,.05);DT([0,1,2,3].map(xf),y,sg(p,.55,.7));BR(232,478,y+40,C.n,'n veces',sg(p,.85,1))}
+
+function s3(p){const y1=75,y=190,c=sg(p,.55,.8),f1=k=>80+k*48,f2=k=>320+k*48,xs=[0,1,2,3].map(f1),ys=[0,1,2,3].map(f2),mm=()=>1-.65*c;
+PW('a','n',180,y1,C.a,C.n);T(':',250,y1,C.s);PW('a','n',300,y1,C.a,C.n);T('=',35,y,C.s);
+G('a',C.a,180,y1,f1,y,p,0,mm);G('a',C.a,300,y1,f2,y,p,.1,mm);
+T(':',272,y,C.s,40,sg(p,.3,.45));DT(xs,y,sg(p,.35,.5));DT(ys,y,sg(p,.35,.5));
+BR(62,242,y+32,C.n,'n veces',sg(p,.35,.5));BR(302,482,y+32,C.n,'n veces',sg(p,.35,.5));ST(xs.concat(ys),y,c);
+const al=sg(p,.82,1);T('=',530,y,C.s,40,al);PW('a','0',575,y,C.a,C.n,al);T('=',630,y,C.s,40,al);T('1',668,y,C.w,40,al)}
+
+const s4f=N=>p=>{const y1=65,y=185,sn=N%2?'−':'+',px=i=>65+i*80,ks=N%2?[0,1,2,3,4,5]:[0,1,2,3,4];
+T('(',110,y1,C.s,44);T('−',135,y1,C.r);T('a',165,y1,C.a);T(')',195,y1,C.s,44);T('n',222,y1-18,C.n,26);T('=',30,y,C.s);
+ks.forEach(k=>{const q=sg(p,k*.07,.3+k*.07);
+if(k==2)fly('…',150,y1,px(k)+30,y,C.s,q);
+else{fly('(',110,y1,px(k),y,C.s,q,34);fly('−',135,y1,px(k)+16,y,C.r,q,32);fly('a',165,y1,px(k)+34,y,C.a,q,32);fly(')',195,y1,px(k)+52,y,C.s,q,34)}
+if(k<ks.length-1)T('·',px(k)+(k==2?62:70),y,C.s,36,sg(p,.3,.45))});
+BR(px(0)-8,px(1)+62,y+32,C.r,'(−)·(−) = +',sg(p,.5,.65));BR(px(3)-8,px(4)+62,y+32,C.r,'(−)·(−) = +',sg(p,.5,.65));
+if(N%2)BR(px(5)-8,px(5)+62,y+32,C.r,'sobra un −',sg(p,.6,.72));
+const al=sg(p,.82,1);T('=',560,y,C.s,40,al);T(sn,600,y,C.r,40,al);PW('a','n',635,y,C.a,C.n,al)};
+
+const s5f=op=>p=>{const y1=70,y=190,q2=sg(p,.4,.72),fo=1-q2,px=k=>70+k*110,ga=k=>100+k*44,gb=k=>330+k*44;
+T('(',110,y1,C.s,44);T('a',140,y1,C.a);T(op,165,y1,C.s);T('b',190,y1,C.b);T(')',215,y1,C.s,44);T('n',238,y1-18,C.n,26);T('=',35,y,C.s);
+[0,1,2,3].forEach(k=>{const q=sg(p,k*.08,.3+k*.08);
+if(k==2){fly('…',165,y1,px(k)+40,y,C.s,q,40,1-.6*q2);fly('…',px(k)+40,y,ga(k),y,C.a,q2);fly('…',px(k)+40,y,gb(k),y,C.b,q2)}
+else{fly('(',110,y1,px(k),y,C.s,q,34,fo);fly(op,165,y1,px(k)+40,y,C.s,q,34,fo);fly(')',215,y1,px(k)+80,y,C.s,q,34,fo);
+fly('a',140,y1,L(px(k)+20,ga(k),q2),y,C.a,q);fly('b',190,y1,L(px(k)+60,gb(k),q2),y,C.b,q)}
+if(k<3)T('·',px(k)+100,y,C.s,40,Math.min(sg(p,.2,.4),fo))});
+DT([0,1,2,3].map(ga),y,sg(p,.62,.75));DT([0,1,2,3].map(gb),y,sg(p,.62,.75));T(op,281,y,C.s,40,sg(p,.68,.8));
+const g=sg(p,.74,.88);BR(84,248,y+32,C.n,'n veces',g);BR(314,478,y+32,C.n,'n veces',g);
+const al=sg(p,.88,1);T('=',520,y,C.s,40,al);PW('a','n',565,y,C.a,C.n,al);T(op,620,y,C.s,40,al);PW('b','n',655,y,C.b,C.n,al)};
+
+const s5r=op=>p=>{const y1=70,y=190,q2=sg(p,.4,.72),px=k=>70+k*110,ga=k=>100+k*44,gb=k=>330+k*44;
+PW('a','n',200,y1,C.a,C.n);T(op,262,y1,C.s);PW('b','n',325,y1,C.b,C.n);T('=',35,y,C.s);
+[0,1,2,3].forEach(k=>{const q=sg(p,k*.08,.3+k*.08);
+if(k==2){fly('…',200,y1,L(ga(k),px(k)+40,q2),y,C.a,q);fly('…',325,y1,L(gb(k),px(k)+40,q2),y,C.b,q,40,1-q2)}
+else{fly('a',200,y1,L(ga(k),px(k)+20,q2),y,C.a,q);fly('b',325,y1,L(gb(k),px(k)+60,q2),y,C.b,q);
+T('(',px(k),y,C.s,34,q2);T(op,px(k)+40,y,C.s,34,q2);T(')',px(k)+80,y,C.s,34,q2)}
+if(k<3)T('·',px(k)+100,y,C.s,40,q2)});
+const gd=sg(p,.35,.5)*(1-sg(p,.45,.6));DT([0,1,2,3].map(ga),y,gd);DT([0,1,2,3].map(gb),y,gd);T(op,281,y,C.s,40,gd);
+BR(84,248,y+32,C.n,'n veces',gd);BR(314,478,y+32,C.n,'n veces',gd);BR(58,500,y+32,C.n,'n veces',sg(p,.78,.92));
+const al=sg(p,.85,1),r=sg(p,.78,1);T('=',515,y,C.s,40,al);
+fly('(',px(0),y,555,y,C.s,r,44);fly('a',px(0)+20,y,582,y,C.a,r);fly(op,px(0)+40,y,606,y,C.s,r);fly('b',px(0)+60,y,630,y,C.b,r);fly(')',px(0)+80,y,655,y,C.s,r,44);T('n',677,y-18,C.n,26,al)};
+
+function s6(p){const y1=80,y=190,q2=sg(p,.5,.8),pos=k=>k<4?70+k*48:L(300+(k-4)*48,70+k*48,q2),ks=[0,1,2,3,4,5,6,7],xs=ks.map(pos);
+PW('a','n',200,y1,C.a,C.n);T('·',262,y1,C.s);PW('a','m',325,y1,C.a,C.m);T('=',35,y,C.s);
+ks.forEach(k=>{const g=k<4,i=g?k:k-4;fly(i==2?'…':'a',g?200:325,y1,xs[k],y,C.a,sg(p,(g?0:.15)+i*.07,(g?.3:.45)+i*.07))});
+for(let k=0;k<7;k++)T('·',(xs[k]+xs[k+1])/2,y,C.s,40,k==3?sg(p,.6,.75):sg(p,.35,.5));
 const bg=sg(p,.4,.5)*(1-sg(p,.78,.9));
-BR(pos(0)-14,pos(2)+14,y+32,C.n,'n veces',bg);BR(pos(3)-14,pos(4)+14,y+32,C.m,'m veces',bg);
-BR(pos(0)-14,pos(4)+14,y+32,C.w,'n + m veces',sg(p,.85,1));
-const al=sg(p,.88,1);T('=',395,y,C.s,40,al);T('a',440,y,C.a,40,al);T('n',462,y-18,C.n,26,al);T('+',478,y-18,C.s,26,al);T('m',494,y-18,C.m,26,al)}
+BR(xs[0]-14,xs[3]+14,y+32,C.n,'n veces',bg);BR(xs[4]-14,xs[7]+14,y+32,C.m,'m veces',bg);BR(xs[0]-14,xs[7]+14,y+32,C.w,'n + m veces',sg(p,.85,1));
+const al=sg(p,.88,1);T('=',460,y,C.s,40,al);T('a',500,y,C.a,40,al);T('n',522,y-18,C.n,26,al);T('+',538,y-18,C.s,26,al);T('m',555,y-18,C.m,26,al)}
 
-const s5f=op=>p=>{const y1=70,y=190,q2=sg(p,.4,.72),fo=1-q2;
-T('(',110,y1,C.s,44);T('a',140,y1,C.a);T(op,165,y1,C.s);T('b',190,y1,C.b);T(')',215,y1,C.s,44);T('n',238,y1-18,C.n,26);T('=',60,y,C.s);
-for(let i=0;i<3;i++){const q=sg(p,i*.1,.3+i*.1),px=100+i*125;
-fly('a',140,y1,L(px+30,150+i*40,q2),y,C.a,q);fly('b',190,y1,L(px+80,330+i*40,q2),y,C.b,q);
-fly('(',110,y1,px,y,C.s,q,44,fo);fly(op,165,y1,px+55,y,C.s,q,40,fo);fly(')',215,y1,px+105,y,C.s,q,44,fo)}
-T(op,280,y,C.s,40,sg(p,.65,.78));
-BR(136,244,y+32,C.n,'n veces',sg(p,.75,.9));BR(316,424,y+32,C.n,'n veces',sg(p,.75,.9));
-const al=sg(p,.88,1);T('=',470,y,C.s,40,al);PW('a','n',520,y,C.a,C.n,al);T(op,570,y,C.s,40,al);PW('b','n',615,y,C.b,C.n,al)};
+function s6d(p){const y1=80,y=190,c=sg(p,.55,.8),d1=k=>55+k*40,d2=k=>405+k*40,xs=[0,1,2,3,4,5,6,7].map(d1),ys=[0,1,2,3].map(d2);
+PW('a','n',200,y1,C.a,C.n);T(':',262,y1,C.s);PW('a','m',325,y1,C.a,C.m);T('=',25,y,C.s);
+xs.forEach((px,k)=>fly(k%4==2?'…':'a',200,y1,px,y,C.a,sg(p,(k%4)*.06,.3+(k%4)*.06),40,k<4?1-.65*c:1));
+ys.forEach((px,k)=>fly(k==2?'…':'a',325,y1,px,y,C.a,sg(p,.12+k*.06,.42+k*.06),40,1-.65*c));
+T(':',370,y,C.s,40,sg(p,.3,.45));DT(xs,y,sg(p,.35,.5));DT(ys,y,sg(p,.35,.5));
+BR(41,349,y+32,C.n,'n veces',sg(p,.4,.5));BR(391,539,y+32,C.m,'m veces',sg(p,.4,.5));
+ST(xs.slice(0,4).concat(ys),y,c);BR(xs[4]-14,xs[7]+14,y+72,C.w,'quedan n − m',sg(p,.82,.95));
+const al=sg(p,.88,1);T('=',570,y,C.s,40,al);T('a',610,y,C.a,40,al);T('n',632,y-18,C.n,26,al);T('−',650,y-18,C.s,26,al);T('m',667,y-18,C.m,26,al)}
+
+function s7(p){const y1=55,y2=145,y3=240,px=k=>70+k*95,ex=k=>462+k*36,q2=k=>sg(p,.45+k*.07,.7+k*.07);
+T('(',200,y1,C.s,44);PW('a','n',230,y1,C.a,C.n);T(')',285,y1,C.s,44);T('m',308,y1-18,C.m,26);T('=',35,y2,C.s);
+[0,1,2,3].forEach(k=>{const q=sg(p,k*.1,.3+k*.1);
+if(k==2){fly('…',230,y1,px(k)+12,y2,C.s,q);fly('…',px(k)+12,y2,ex(k),y2-18,C.s,q2(k),26)}
+else{fly('a',230,y1,px(k),y2,C.a,q);fly('n',252,y1-18,px(k)+22,y2-18,C.n,q,26);fly('n',px(k)+22,y2-18,ex(k),y2-18,C.n,q2(k),26)}
+if(k<3)T('·',(px(k)+px(k+1))/2+4,y2,C.s,40,q);if(k<3)T('+',(ex(k)+ex(k+1))/2,y2-18,C.s,26,sg(p,.65,.8))});
+BR(56,392,y2+30,C.m,'m veces',sg(p,.3,.45));BR(448,586,y2+30,C.m,'m sumandos',sg(p,.78,.9));
+const a1=sg(p,.4,.5);T('=',405,y2,C.s,40,a1);T('a',440,y2,C.a,40,a1);
+const al=sg(p,.88,1);T('=',405,y3,C.s,40,al);T('a',440,y3,C.a,40,al);T('n',462,y3-18,C.n,26,al);T('·',480,y3-18,C.s,26,al);T('m',498,y3-18,C.m,26,al)}
 
 function s2(p){const y=150;PW('a','1',100,y,C.a,C.n);T('=',170,y,C.s,40,sg(p,0,.1));fly('a',100,y,250,y,C.a,sg(p,.1,.5));BR(232,268,y+40,C.n,'1 factor',sg(p,.6,.8));
 const al=sg(p,.8,1);T('=',320,y,C.s,40,al);fly('a',250,y,370,y,C.a,al)}
-
-function s3(p){const y1=75,y=190,c=sg(p,.55,.8),mm=1-.65*c,X=[100,148,196,300,348,396];
-PW('a','n',180,y1,C.a,C.n);T(':',250,y1,C.s);PW('a','n',300,y1,C.a,C.n);T('=',45,y,C.s);
-X.forEach((px,k)=>{const g=k<3,i=k%3;fly('a',g?180:300,y1,px,y,C.a,sg(p,(g?0:.1)+i*.08,(g?.25:.35)+i*.08),40,mm)});
-T(':',250,y,C.s,40,sg(p,.3,.45));BR(86,210,y+32,C.n,'n veces',sg(p,.35,.5));BR(286,410,y+32,C.n,'n veces',sg(p,.35,.5));
-x.globalAlpha=c;x.strokeStyle=C.r;x.lineWidth=3;X.forEach(px=>{x.beginPath();x.moveTo(px-14,y+16);x.lineTo(px+14,y-16);x.stroke()});
-const al=sg(p,.82,1);T('=',450,y,C.s,40,al);PW('a','0',495,y,C.a,C.n,al);T('=',565,y,C.s,40,al);T('1',605,y,C.w,40,al)}
-
-const s4f=N=>p=>{const y1=65,y=185,sn=N%2?'−':'+',px=i=>70+i*100;
-T('(',110,y1,C.s,44);T('−',135,y1,C.r);T('a',165,y1,C.a);T(')',195,y1,C.s,44);T('n',222,y1-18,C.n,26);T('=',35,y,C.s);
-for(let i=0;i<N;i++){const q=sg(p,i*.1,.3+i*.1);fly('(',110,y1,px(i),y,C.s,q,44);fly('−',135,y1,px(i)+25,y,C.r,q);fly('a',165,y1,px(i)+55,y,C.a,q);fly(')',195,y1,px(i)+85,y,C.s,q,44)}
-for(let j=0;j<Math.floor(N/2);j++)BR(px(2*j)-12,px(2*j+1)+98,y+32,C.r,'(−)·(−) = +',sg(p,.5,.65));
-if(N%2)BR(px(N-1)-12,px(N-1)+98,y+32,C.r,'sobra un −',sg(p,.6,.72));
-const al=sg(p,.82,1);T('=',510,y,C.s,40,al);T(sn,555,y,C.r,40,al);PW('a','n',595,y,C.a,C.n,al)};
-
-function s6d(p){const y1=80,y=190,X=[130,178,226,330,378],c=sg(p,.55,.8);
-PW('a','n',200,y1,C.a,C.n);T(':',262,y1,C.s);PW('a','m',325,y1,C.a,C.m);T('=',70,y,C.s);
-X.forEach((px,k)=>{const g=k<3,i=g?k:k-3,d=(g?k<2:true)?1-.65*c:1;fly('a',g?200:325,y1,px,y,C.a,sg(p,(g?0:.15)+i*.1,(g?.3:.45)+i*.1),40,d)});
-T(':',280,y,C.s,40,sg(p,.4,.5));BR(116,240,y+32,C.n,'n veces',sg(p,.4,.5));BR(316,392,y+32,C.m,'m veces',sg(p,.4,.5));
-x.globalAlpha=c;x.strokeStyle=C.r;x.lineWidth=3;[130,178,330,378].forEach(px=>{x.beginPath();x.moveTo(px-14,y+16);x.lineTo(px+14,y-16);x.stroke()});
-BR(212,240,y+72,C.w,'quedan n − m',sg(p,.82,.95));
-const al=sg(p,.88,1);T('=',450,y,C.s,40,al);T('a',495,y,C.a,40,al);T('n',517,y-18,C.n,26,al);T('−',533,y-18,C.s,26,al);T('m',550,y-18,C.m,26,al)}
-
-function s7(p){const y1=55,y2=145,y3=240;
-T('(',200,y1,C.s,44);PW('a','n',230,y1,C.a,C.n);T(')',285,y1,C.s,44);T('m',308,y1-18,C.m,26);T('=',50,y2,C.s);
-for(let i=0;i<3;i++){const px=110+i*130,q=sg(p,i*.12,.3+i*.12),q2=sg(p,.45+i*.1,.7+i*.1);
-fly('a',230,y1,px,y2,C.a,q);fly('n',252,y1-18,px+22,y2-18,C.n,q,26);if(i)T('·',px-35,y2,C.s,40,q);fly('n',px+22,y2-18,502+i*44,y2-18,C.n,q2,26)}
-const a1=sg(p,.4,.5);T('=',450,y2,C.s,40,a1);T('a',480,y2,C.a,40,a1);[0,1].forEach(i=>T('+',524+i*44,y2-18,C.s,26,sg(p,.65,.8)));
-BR(494,605,y2+30,C.m,'m sumandos',sg(p,.78,.9));
-const al=sg(p,.88,1);T('=',450,y3,C.s,40,al);T('a',480,y3,C.a,40,al);T('n',502,y3-18,C.n,26,al);T('·',519,y3-18,C.s,26,al);T('m',536,y3-18,C.m,26,al)}
 
 function s8(p){const y1=65,y2=160,y3=250,f1=1-sg(p,.35,.5),q1=sg(p,.1,.3);
 T('a',100,y1,C.a);T('−',122,y1-18,C.r,26);T('n',140,y1-18,C.n,26);T('=',55,y2,C.s);
@@ -128,31 +151,20 @@ T('=',60,y,C.s,40,sg(p,0,.1));fly('n',150,y1-4,132,y-28,C.n,sg(p,.1,.45),24);T('
 x.globalAlpha=sg(p,.3,.5);x.strokeStyle=C.w;x.lineWidth=3;x.beginPath();x.moveTo(184,y-30);x.lineTo(184+(M?90:55),y-30);x.stroke();
 fly('a',120,y1,M?205:208,y,C.a,sg(p,.4,.8));if(M)fly('m',150,y1-26,228,y-18,C.m,sg(p,.5,.85),26)};
 
-const s5r=op=>p=>{const y1=70,y=190,q2=sg(p,.4,.75);
-PW('a','n',200,y1,C.a,C.n);T(op,262,y1,C.s);PW('b','n',325,y1,C.b,C.n);T('=',40,y,C.s);
-for(let i=0;i<3;i++){const q=sg(p,i*.1,.3+i*.1),px=100+i*125;
-fly('a',200,y1,L(110+i*40,px+30,q2),y,C.a,q);fly('b',325,y1,L(300+i*40,px+80,q2),y,C.b,q);
-T('(',px,y,C.s,44,q2);T(op,px+55,y,C.s,40,q2);T(')',px+105,y,C.s,44,q2)}
-T(op,245,y,C.s,40,sg(p,.3,.45)*(1-sg(p,.4,.55)));
-const g=sg(p,.35,.5)*(1-sg(p,.45,.6));BR(96,204,y+32,C.n,'n veces',g);BR(286,394,y+32,C.n,'n veces',g);
-BR(88,458,y+32,C.n,'n veces',sg(p,.78,.92));
-const al=sg(p,.85,1),r=sg(p,.78,1);T('=',480,y,C.s,40,al);
-fly('(',100,y,530,y,C.s,r,44);fly('a',130,y,560,y,C.a,r);fly(op,155,y,585,y,C.s,r);fly('b',180,y,610,y,C.b,r);fly(')',205,y,635,y,C.s,r,44);T('n',658,y-18,C.n,26,al)};
-
 const K=(k,t)=>`<i class="${k}">${t}</i>`,A=K('a','a'),Bb=K('b','b'),N=K('n','n'),M=K('m','m'),Q=(b,e)=>`${b}<sup>${e}</sup>`,
 FR=(u,d)=>`<span class="fr"><span>${u}</span><span>${d}</span></span>`,RD=(i,r)=>`<sup>${i}</sup>√<span class="ov">${r}</span>`,
 MI=K('s','−'),PL=K('s','+'),NG=`(${MI}${A})`,pa=o=>`(${A} ${o} ${Bb})`,pw=o=>`${Q(A,N)} ${o} ${Q(Bb,N)}`,
 prop=f=>`<div class="pc st"><small>Partimos de</small><div>${f[0]}</div></div><div class="eq">=</div><div class="pc go"><small>Llegamos a</small><div>${f[1]}</div></div>`+(f[2]?`<div class="cd">${f[2]}</div>`:'');
-const R=(f,e,x,d,l)=>({f,e,x,d,l});
-const e5='(a · b)ⁿ repite el paréntesis n veces; al reagrupar, todas las a se juntan por un lado y todas las b por otro. ',e5r='Se repiten n veces la a y n veces la b, se emparejan en n paréntesis (a · b) y se recogen como (a · b)ⁿ. ';
+const R=(f,e,x,d,l,gp)=>({f,e,x,d,l,gp});
+const e5=o=>`(a ${o} b)ⁿ repite el paréntesis n veces, multiplicándolo por sí mismo. Al reagrupar, todas las a se juntan por un lado y todas las b por otro. `,e5r=o=>`Se repiten las a y las b n veces cada una, se emparejan en paréntesis (a ${o} b) y se recogen como (a ${o} b)ⁿ. `;
 const S={
-1:{t:'Definición de potencia',v:[R([Q(A,N),`${A} · ${A} · … · ${A}`,'(n veces)'],'El exponente n indica cuántas veces se escribe la base a como factor. Las copias salen de la base, que se queda en su sitio.','2⁴ = 2 · 2 · 2 · 2 = 16',s1)]},
+1:{t:'Definición de potencia',v:[R([Q(A,N),`${A} · ${A} · … · ${A}`,'(n veces)'],'El exponente n indica cuántas veces se multiplica la base a por sí misma. n puede ser 2, 3, 10… por eso se escribe con puntos suspensivos.','2⁴ = 2 · 2 · 2 · 2 = 16',s1)]},
 2:{t:'Potencia de exponente 1',v:[R([Q(A,'1'),A],'Con exponente 1 solo hay un factor: la potencia es la propia base.','9¹ = 9',s2)]},
 3:{t:'Potencia de exponente 0',v:[R([`${Q(A,N)} : ${Q(A,N)}`,`${Q(A,'0')} = 1`,'(con a ≠ 0)'],'Dividir aⁿ entre sí misma da 1, y por la regla de la misma base da aⁿ⁻ⁿ = a⁰. Cada factor del dividendo se cancela con uno del divisor.','7⁰ = 1',s3)]},
-4:{t:'Potencia con base negativa',v:[R([Q(NG,N),`${PL}${Q(A,N)}`,'(si n es par)'],'Los factores negativos se agrupan por parejas y cada pareja da +. Con n par no sobra ninguno: el resultado es positivo.','(−2)⁴ = +16',s4f(4),'n par'),R([Q(NG,N),`${MI}${Q(A,N)}`,'(si n es impar)'],'Los factores negativos se agrupan por parejas, pero con n impar sobra uno: el resultado es negativo.','(−2)³ = −8',s4f(3),'n impar')]},
-5:{t:'Producto y división con el mismo exponente',v:[R([Q(pa('·'),N),pw('·')],e5,'(4 · 3)² = 4² · 3² = 12²',s5f('·'),'(a·b)ⁿ → aⁿ·bⁿ'),R([pw('·'),Q(pa('·'),N)],e5r,'4² · 3² = (4 · 3)² = 12²',s5r('·'),'aⁿ·bⁿ → (a·b)ⁿ'),R([Q(pa(':'),N),pw(':')],e5,'(8 : 2)³ = 8³ : 2³ = 4³',s5f(':'),'(a:b)ⁿ → aⁿ:bⁿ'),R([pw(':'),Q(pa(':'),N)],e5r.replace(/·/g,':'),'8³ : 2³ = (8 : 2)³ = 4³',s5r(':'),'aⁿ:bⁿ → (a:b)ⁿ')]},
-6:{t:'Producto y división con la misma base',v:[R([`${Q(A,N)} · ${Q(A,M)}`,Q(A,`${N}+${M}`)],'aⁿ aporta n factores a y aᵐ aporta m factores a. Al juntarlos hay n + m factores iguales.','2³ · 2⁴ = 2⁷',s6,'Producto'),R([`${Q(A,N)} : ${Q(A,M)}`,Q(A,`${N}−${M}`),'(con n ≥ m)'],'Se cancelan m factores del dividendo con los m del divisor. Quedan n − m factores.','5⁶ : 5² = 5⁴',s6d,'División')]},
-7:{t:'Potencia de una potencia',v:[R([Q(`(${Q(A,N)})`,M),Q(A,`${N}·${M}`)],'(aⁿ)ᵐ repite aⁿ m veces. Con la misma base se suman los exponentes: m sumandos iguales a n, es decir, n · m.','(3²)⁴ = 3⁸',s7)]},
+4:{t:'Potencia con base negativa',v:[R([Q(NG,N),`${PL}${Q(A,N)}`,'(si n es par)'],'Los factores (−a) se multiplican: (−a) · (−a) · … · (−a). Se agrupan de dos en dos y cada pareja da +. Con n par no sobra ninguno: el resultado es positivo.','(−2)⁴ = +16',s4f(4),'n par'),R([Q(NG,N),`${MI}${Q(A,N)}`,'(si n es impar)'],'Los factores (−a) se multiplican: (−a) · (−a) · … · (−a). Se agrupan de dos en dos, pero con n impar sobra uno: el resultado es negativo.','(−2)³ = −8',s4f(3),'n impar')]},
+5:{t:'Producto y división con el mismo exponente',v:[R([Q(pa('·'),N),pw('·')],e5('·'),'(4 · 3)² = 4² · 3² = 12²',s5f('·'),'(a·b)ⁿ → aⁿ·bⁿ','Multiplicación'),R([pw('·'),Q(pa('·'),N)],e5r('·'),'4² · 3² = (4 · 3)² = 12²',s5r('·'),'aⁿ·bⁿ → (a·b)ⁿ','Multiplicación'),R([Q(pa(':'),N),pw(':')],e5(':'),'(8 : 2)³ = 8³ : 2³ = 4³',s5f(':'),'(a:b)ⁿ → aⁿ:bⁿ','División'),R([pw(':'),Q(pa(':'),N)],e5r(':'),'8³ : 2³ = (8 : 2)³ = 4³',s5r(':'),'aⁿ:bⁿ → (a:b)ⁿ','División')]},
+6:{t:'Producto y división con la misma base',v:[R([`${Q(A,N)} · ${Q(A,M)}`,Q(A,`${N}+${M}`)],'aⁿ aporta n factores a y aᵐ aporta m factores a. Al multiplicarlos hay n + m factores iguales.','2³ · 2⁴ = 2⁷',s6,'Multiplicación'),R([`${Q(A,N)} : ${Q(A,M)}`,Q(A,`${N}−${M}`),'(con n ≥ m)'],'Se cancelan m factores del dividendo con los m del divisor. Quedan n − m factores.','5⁶ : 5² = 5⁴',s6d,'División')]},
+7:{t:'Potencia de una potencia',v:[R([Q(`(${Q(A,N)})`,M),Q(A,`${N}·${M}`)],'(aⁿ)ᵐ repite aⁿ m veces, multiplicándola por sí misma. Con la misma base se suman los exponentes: m sumandos iguales a n, es decir, n · m.','(3²)⁴ = 3⁸',s7)]},
 8:{t:'Exponente negativo',v:[R([Q(A,`−${N}`),`${FR(1,Q(A,N))}`],'Escribimos −n como 0 − n: restar exponentes es dividir potencias, y a⁰ = 1. Queda 1 dividido entre aⁿ.','2⁻³ = 1/2³ = 1/8',s8)]},
 9:{t:'Exponente fraccionario',v:[R([Q(A,FR(1,N)),RD(N,A)],'Un exponente 1/n es una raíz de índice n. El denominador n pasa a ser el índice.','8^(1/3) = ∛8 = 2',s9f(0),'Exponente 1/n'),R([Q(A,FR(M,N)),RD(N,Q(A,M))],'En m/n, el denominador n es el índice de la raíz y el numerador m es el exponente del radicando.','4^(3/2) = √(4³) = √64 = 8',s9f(1),'Exponente m/n')]}};
 const B=['aⁿ','a¹','a⁰','(−a)ⁿ','(a·b)ⁿ','aⁿ·aᵐ','(aⁿ)ᵐ','a⁻ⁿ','a<sup>m/n</sup>'];
@@ -160,7 +172,10 @@ let cur=1,vi=0,P=0,dir=0,raf=null;const $=s=>document.querySelector(s);
 B.forEach((h,i)=>{const e=document.createElement('button');e.innerHTML=h;e.onclick=()=>go(i+1);$('#nav').append(e)});
 function go(k,j=0){cur=k;vi=j;stop();P=0;const V=S[k].v,v=V[j];
 document.querySelectorAll('#nav button').forEach((b,i)=>b.classList.toggle('on',i+1==k));
-$('#vs').innerHTML=V.length>1?V.map((u,i)=>`<button class="${i==j?'on':''}" onclick="go(${k},${i})">${u.l}</button>`).join(''):'';
+const gps=[...new Set(V.map(u=>u.gp).filter(Boolean))];let h='';
+if(gps.length){const g=V[j].gp,z=V.length/gps.length;h=gps.map((n,i)=>`<button class="${n==g?'on':''}" onclick="go(${k},${i*z+j%z})">${n}</button>`).join('')+'<span class="br"></span>'+V.map((u,i)=>u.gp==g?`<button class="${i==j?'on':''}" onclick="go(${k},${i})">${u.l}</button>`:'').join('')}
+else if(V.length>1)h=V.map((u,i)=>`<button class="${i==j?'on':''}" onclick="go(${k},${i})">${u.l}</button>`).join('');
+$('#vs').innerHTML=h;
 $('#tt').textContent=S[k].t;$('#pr').innerHTML=prop(v.f);$('#em').textContent=v.e;$('#ex').textContent=v.x;draw()}
 function draw(){x.globalAlpha=1;x.clearRect(0,0,W,H);x.textAlign='center';x.textBaseline='middle';S[cur].v[vi].d(P);
 $('#sl').value=P*100;$('#pc').textContent=Math.round(P*100)+'%'}
